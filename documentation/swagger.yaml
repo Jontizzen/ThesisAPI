@@ -1,0 +1,505 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Thesis API-first
+  description: >-
+    Retrieve information from PostNord, such as vendor information and create return notes
+    for clients.
+  contact:
+    email: jonatan.larsson77@gmail.com
+servers:
+  # Added by API Auto Mocking Plugin
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/jonatan.larsson77/Thesis-API-first/1.0.0
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/jonatan.larsson77/Thesis_API/1.0.0
+tags: 
+- name: "Vendor"
+  description: Everything related to vendors
+- name: "ReturnNote"
+  description: Everything about return notes
+
+paths: 
+  /vendor:
+    get:
+      tags: 
+      - Vendor
+      summary: "Get all the available vendors"
+      description: Gets all the availabale vendors in json/xml format.
+      # status codes
+      responses:
+        '200':   
+          $ref: '#/components/responses/getVendors'
+        '400':
+          $ref: '#/components/responses/400Error'
+        "404":
+          $ref: '#/components/responses/404Error'
+        "5XX":
+          $ref: '#/components/responses/5XXError'
+    post:
+      tags:
+      - Vendor
+      summary: Create new vendor
+      operationId: addVendor
+      description: Here you can create a new vendor with the specified parameters
+      parameters: 
+      - name: name
+        in: query
+        description: name 
+        required: true
+        schema:
+          type: string
+      - name: address
+        in: query
+        description: address 
+        required: true
+        schema:
+          type: string
+      - name: postnr
+        in: query
+        description: postal code
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '201':
+          $ref: '#/components/responses/createdVendor'
+        '400':
+          $ref: '#/components/responses/400Error'
+        '405':
+          $ref: '#/components/responses/405Error'
+        "5XX":
+          $ref: '#/components/responses/5XXError'
+  '/vendor/{vendorId}':
+    get:
+      tags: 
+      - Vendor
+      summary: Get vendor by id
+      operationId: getVendor
+      description: Obtain information about a vendor from the specific id
+      parameters:
+        - name: vendorId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+      responses:
+        '200':
+          $ref: '#/components/responses/getVendorById'
+        '400':
+          $ref: '#/components/responses/400Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '405':
+          $ref: '#/components/responses/405Error'
+        "5XX":
+          $ref: '#/components/responses/5XXError'
+    patch:
+      tags:
+      - Vendor
+      summary: Update existing vendor
+      description: Here you can update existing vendor with the specific id provided
+      operationId: updateVendor
+      parameters:
+      - name: vendorId
+        in: path
+        description: ID of the vendor that needs to be updated
+        required: true
+        schema:
+          type: integer
+          format: int64
+          minimum: 1
+      - name: name
+        in: query
+        description: New name 
+        required: false
+        schema:
+          type: string
+      - name: address
+        in: query
+        description: New address 
+        required: false
+        schema:
+          type: string
+      - name: postnr
+        in: query
+        description: New postal code
+        required: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          $ref: '#/components/responses/updatedVendor'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '405':
+          $ref: '#/components/responses/405Error'
+        "5XX":
+          $ref: '#/components/responses/5XXError'
+    delete:
+      tags:
+        - Vendor
+      summary: Deletes vendor
+      description: Here you can delete a vendor with the specified id
+      operationId: deleteVendor
+      parameters:
+        - name: vendorId
+          in: path
+          description: Vendor id to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          $ref: '#/components/responses/400Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        "5XX":
+          $ref: '#/components/responses/5XXError'
+  /returnNote/{vendorId}:
+    post:
+      tags: 
+      - ReturnNote
+      summary: Create new return note
+      description: Here you can create a new return note with the described parameters
+      operationId: addReturnNote
+      parameters: 
+      - name: vendorId
+        in: path
+        description: Id of specific Vendor
+        required: true
+        schema:
+          type: integer
+          format: int64
+          minimum: 1
+      - name: subscription id
+        in: query
+        description: subscription id
+        required: true
+        schema:
+          type: integer
+          format: int64
+          minimum: 1
+      - name: company
+        in: query
+        description: Company name
+        required: true
+        schema:
+          type: string
+      - name: address
+        in: query
+        description: Address 1
+        required: true
+        schema:
+          type: string
+      - name: district
+        in: query
+        description: District
+        required: true
+        schema:
+          type: string
+      - name: country
+        in: query
+        description: Country
+        required: true
+        schema:
+          type: string
+      - name: postnr
+        in: query
+        description: postal number
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: Date
+        in: query
+        description: Date 
+        required: true
+        schema:
+          type: string
+          format: date
+      - name: contact
+        in: query
+        description: Contact person
+        required: false
+        schema:
+          type: string
+      - name: email
+        in: query
+        description: Email address 
+        required: false
+        schema:
+          type: string
+      - name: phone
+        in: query
+        description: Phone number of contact person
+        required: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '201':
+          $ref: '#/components/responses/createdReturnNote'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '405':
+          $ref: '#/components/responses/405Error'
+        "5XX":
+          $ref: '#/components/responses/5XXError'
+    
+# Endpoints    
+components:
+  schemas:
+    Vendor:
+      type: object
+      xml:
+        name: vendor
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        address:
+          type: array
+          items:
+            type: string
+        postnr:
+          type: integer
+          format: int64
+
+    ReturnNote:
+      type: object
+      xml:
+        name: returnNote
+      properties:
+        kolliId:
+          type: integer
+          format: int64
+        vendorId:
+          type: integer
+          format: int64
+        subscriptionId:
+          type: integer
+          format: int64
+        contact:
+          type: string
+        phone:
+          type: integer
+          format: int64
+        email:
+          type: string
+          format: email
+        company:
+          type: string
+        address:
+          type: string
+        district:
+          type: string
+        country:
+          type: string
+        postnr:
+          type: integer
+          format: int64
+        date:
+          type: string
+          format: date
+      
+  # Mock server responses    
+  responses:
+  
+    400Error:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            type: object 
+            properties:
+              message:
+                type: string
+                example: The server could not understand the request due to invalid syntax.
+        application/xml:
+          schema:
+            type: object 
+            xml:
+              name: 400Error
+            properties:
+              message:
+                type: string
+                example: The server could not understand the request due to invalid syntax.
+                
+    404Error:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object 
+            properties:
+              message:
+                type: string
+                example: The server could not find the request specified.
+        application/xml:
+          schema:
+            type: object 
+            xml:
+              name: 404Error
+            properties:
+              message:
+                type: string
+                example: The server could not find the request specified.
+                
+    405Error:
+      description: Method not allowed
+      content:
+        application/json:
+          schema:
+            type: object 
+            properties:
+              message:
+                type: string
+                example: The method specified in the Request-Line is not allowed for the resource identified.
+        application/xml:
+          schema:
+            type: object 
+            xml:
+              name: 405Error
+            properties:
+              message:
+                type: string
+                example: The method specified in the Request-Line is not allowed for the resource identified.
+                
+    5XXError:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            type: object 
+            properties:
+              message:
+                type: string
+                example: The server encountered an error.
+        application/xml:
+          schema:
+            type: object 
+            xml:
+              name: 5XXError
+            properties:
+              message:
+                type: string
+                example: The server encountered an error.
+                
+    getVendors:
+      description: Successfully retrieved vendors
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Vendor'
+          example:
+            - id: 3 
+              name: Abisoft AB
+              address: abisoft@hotmail.com
+              postnr: 55 333
+            - id: 9
+              name: Johansson AB
+              address: johansson@live.se
+              postnr: 53 456
+            - id: 21
+              name: Aoxet
+              address: aoexet@outlook.com
+              postnr: 55 345
+        application/xml:
+          schema:
+            $ref: '#/components/schemas/Vendor'
+          examples:
+            Abisoft:
+              value:
+                id: 3 
+                name: Abisoft AB
+                address: [abisoft@hotmail.com]
+                postnr: 55 333
+            Johansson:
+              value:
+                id: 9
+                name: Johansson AB
+                address: [johansson@live.se]
+                postnr: 53 456
+            Aoxet:
+              value:
+                id: 21
+                name: Aoxet
+                address: [aoxet@outlook.com]      
+                postnr: 55 345
+                
+    getVendorById:
+      description: Successfully returned a vendor by id
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Vendor'
+          example:
+            id: 5
+            name: AMX AB
+            address: amx@outlook.com
+            postnr: 555 333
+        application/xml:
+          schema:
+            $ref: '#/components/schemas/Vendor'
+          example:
+            id: 5
+            name: AMX AB
+            address: [amx@outlook.com]
+            postnr: 55 333
+            
+    createdVendor:
+      description: Successfully created new vendor
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Vendor'
+          example:
+            id: 3
+        application/xml:
+          schema:
+            $ref: '#/components/schemas/Vendor'
+          example:
+            id: 3
+            
+    updatedVendor:
+      description: Successfully updated vendor
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Vendor'
+          example:
+            id: 9
+        application/xml:
+          schema:
+            $ref: '#/components/schemas/Vendor'
+          example:
+            id: 9
+            
+            
+    createdReturnNote:
+      description: Successfully created new return note
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ReturnNote'
+          example:
+            kolliId: 20
+            subscriptionId: 32
+        application/xml:
+          schema:
+            $ref: '#/components/schemas/ReturnNote'
+          example:
+            kolliId: 20
+            subscriptionId: 32
